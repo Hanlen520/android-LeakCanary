@@ -1,0 +1,99 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "25.0.0"
+
+    lintOptions {
+        abortOnError false
+    }
+
+    defaultConfig {
+        applicationId "com.example.leakcanary"
+        minSdkVersion bfcBuildConfig.minSdkVersion
+        targetSdkVersion 26
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
+    }
+    signingConfigs{
+        debug {
+            keyAlias 'imoo'
+            keyPassword 'bbkeebbklinux123'
+            storeFile file('./opt/imoo.jks')
+            storePassword 'bbkeebbk'
+        }
+
+        release {
+            keyAlias 'imoo'
+            keyPassword 'bbkeebbklinux123'
+            storeFile file('./opt/imoo.jks')
+            storePassword 'bbkeebbk'
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            signingConfig signingConfigs.debug
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+//    ext.copyApk = { ->
+//        def fromFile = "./build/outputs/apk/BfcLeakCanaryDemo-release.apk"
+//        def intoFile = "./../apk"
+//
+//        File file = new File(intoFile)
+//        file.mkdirs()
+//
+//        def appName = "BfcLeakCanaryDemo.apk"
+//
+//        // copy --> rename
+//        copy {
+//            from fromFile
+//            into intoFile
+//
+//            rename {
+//                appName
+//            }
+//        }
+//
+//        println("===============================================================")
+//        println("PREPARE COPY APK TO APK FOLDER  : " + appName)
+//        println("===============================================================")
+//    }
+//
+//    assembleRelease {
+//        doLast {
+//            copyApk()
+//        }
+//    }
+
+    // 修改apk名称，并放到apk目录下
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('-release.apk')) {
+                def fileName = outputFile.name;
+                fileName = fileName.replace("-release.apk", ".apk")
+                output.outputFile = new File(file('./../apk'), fileName)
+                println "输出文件位置： " + output.outputFile
+            }
+        }
+    }
+}
+
+dependencies {
+    compile project(':BfcLeakCanarySdk')
+    compile bfcBuildConfig.deps["bfc-blockcanary"]
+//    debugCompile project(':BfcLeakCanarySdk')
+//    releaseCompile project(':BfcLeakCanarySdk-no-op');
+}

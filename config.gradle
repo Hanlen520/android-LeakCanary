@@ -1,0 +1,12 @@
+ext {
+    BUILD_BRANCH_NAME='develop'
+
+    // 名称中以“-beta”结尾将会上传到maven快照仓库中，去掉即可上传到正式发布仓库
+    // 上次正式版本：4.0.2
+    // 上次灰度版本：4.0.0-rc
+    // 上次beta版本号：4.0.1-beta
+    // 上次bugfix版本号：-bugfix
+    VERSION_NAME = '5.0.0'
+    // 配置demo以及所有sdk的版本Code值
+    VERSION_CODE = 11
+}

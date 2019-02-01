@@ -1,0 +1,29 @@
+apply from: "http://172.28.2.93/bfc/Bfc/raw/develop/common-config/bfc-config.gradle"
+apply from: "config.gradle"
+apply from: "http://172.28.2.93/OneStores/Epimetheus-Android/raw/release/config_version.gradle"
+
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'http://172.28.1.147:8081/nexus/content/repositories/thirdparty/'}
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.eebbk.checker.plugins:bbk_checker:1.1'
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url bfcBuildConfig.MAVEN_URL }
+        // Bfc项目的灰度仓库
+        maven { url bfcBuildConfig.MAVEN_RC_URL }
+
+        maven { url bfcBuildConfig.MAVEN_SNAPSHOT_URL }
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
